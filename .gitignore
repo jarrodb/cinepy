@@ -1,0 +1,28 @@
+#
+# Compiled files
+#
+*.pyc
+#
+# Packages
+#
+*.tar
+*.gz
+*.zip
+#
+# OS stuff
+.DS_Store*
+#._*
+settings_local.py
+settings_prod.py
+*.db
+#
+# vim temp files
+*.swp
+#junk
+.back
+.bak
+.backup
+test.py
+temp/*
+static/media/posters/*
+static/media/movies/*

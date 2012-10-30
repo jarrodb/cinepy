@@ -1,0 +1,29 @@
+{% extends "../base/base.tpl" %}
+  {% block header_extra %}
+  {% end %}
+  {% block content %}
+      <div class="row">
+      {% if page.count %}
+        {% if page.is_paginated %}
+          <div class="row">
+          {% include "../includes/pagination.tpl" %}
+          </div>
+        {% end %}
+        <div class="span12">
+          <ul class="thumbnails">
+            {% comment Add Pagination %}
+            {% for media in page.items %}
+              {% include '../includes/media-result.tpl' %}
+            {% end %}
+          </ul>
+        </div>
+        {% if page.is_paginated %}
+          <div class="row">
+          {% include "../includes/pagination.tpl" %}
+          </div>
+        {% end %}
+      {% else %}
+        No results
+      {% end %}
+      </div>
+  {% end %}

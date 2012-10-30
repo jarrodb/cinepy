@@ -1,0 +1,45 @@
+{% extends "../base/base.tpl" %}
+  {% block header_extra %}
+  <script type="text/javascript" src="/static/js/custom.js"></script>
+  <script type="text/javascript"
+    src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js">
+  </script>
+  <script type="text/javascript"
+    src="/static/bootstrap/js/bootstrap-tab.js">
+  </script>
+  <script type="text/javascript"
+    src="/static/bootstrap/js/bootstrap-modal.js">
+  </script>
+  <script type="text/javascript"
+    src="/static/bootstrap/js/bootstrap-typeahead.js">
+  </script>
+  <script type="text/javascript"
+    src="/static/bootstrap/js/bootstrap-datepicker.js">
+  </script>
+  <link href="/static/bootstrap/css/datepicker.css" rel="stylesheet">
+  <link href="/static/video/video-js.css" rel="stylesheet">
+  <script src="/static/video/video.js"></script>
+  <script>
+    _V_.options.flash.swf = "/static/video/video-js.swf"
+  </script>
+  {% end %}
+  {% block content %}
+
+    <!-- Example row of columns -->
+    <div class="row">
+      <div class="span9 columns" style="width: 98%;">
+        {% include "movie-edit.tpl" %}
+      </div>
+    </div>
+
+    <style>
+      overflow-y: auto;
+      padding: 15px;
+    </style>
+    <script type="text/javascript">
+        $('#myTab a').click(function (e) {
+            e.preventDefault();
+                $(this).tab('show');
+            })
+    </script>
+  {% end %}

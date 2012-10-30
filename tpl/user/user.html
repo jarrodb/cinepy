@@ -1,0 +1,20 @@
+{% extends "base.tpl" %}
+  {% block content %}
+      <div class="row-fluid">
+        <div style="text-align: center;" class="span3">
+          <div class="well">
+            <img src="/static/images/default-profile-medium.jpg">
+            <p style="text-align: center;">{{user.usertype_display()}}</p>
+          </div>
+        </div>
+        <div class="span9">
+          <h1>{{user.name}}</h1>
+          <h3>{{user.email}}</h3>
+        </div>
+      </div>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+  {% end %}

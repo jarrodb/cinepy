@@ -1,0 +1,94 @@
+{% extends "../base.tpl" %}
+  {% block header_extra %}
+  <script type="text/javascript" src="/static/js/custom.js"></script>
+  <script src="/static/bootstrap/js/jquery.js"></script>
+  <script type="text/javascript" src="/static/js/ui.core.min.js"></script>
+  <script type="text/javascript" src="/static/js/ui.sortable.min.js"></script>
+  {% end %}
+  {% block admin-content %}
+    {% raw xsrf_form_html() %}
+    <div class="span6">
+      {% include '../../includes/error-include.tpl' %}
+
+      <div style="text-align: center;" class="span2">
+        <img src="{% raw series.get_poster_url() %}">
+        <h2><small>
+          <b>{{series.get_series_display()}}</b>
+        </small></h2>
+      </div>
+      <div class="span3" style="margin-top: 5px;">
+        <h2>{{series.title}}</h2>
+        <small>{{series.description}}</small>
+      </div>
+
+      <!-- Season work -->
+      <div style="margin-top: 10px;" class="span6">
+        {% include 'subnav.tpl' %}
+
+        {% if len(series.seasons) > 0 %}
+        <div style="padding-right: 10px;" class="accordion" id="accordion2">
+          {% for season_index, season in enumerate(series.seasons, 1) %}
+            {% include 'season.tpl' %}
+          {% end %}
+        </div>
+        {% else %}
+          <p>Create a season to assign episodes</p>
+        {% end %}
+      </div>
+      <script type="text/javascript">
+        var num_seasons = {{len(series.seasons)}};
+        var add_season_display = 0;
+        var wellids = new Array("seasonform", "seriesform");
+
+        $(".collapse").collapse();
+
+        function form_display(id) {
+          $.each(wellids, function(i, item) {
+            if (item === id) {
+              $('#'+item).show();
+            } else {
+              $('#'+item).hide();
+            }
+          });
+        }
+        function nav_add_button(show) {
+          if (show > 0) {
+            $('#nav-add-season').show();
+          } else {
+            $('#nav-add-season').hide();
+          }
+        }
+        function setup_seriesform() {
+          form_display('seriesform');
+        }
+        function hide_forms() {
+          form_display('');
+        }
+        function setup_seasonform() {
+          var sid = 'seasonform';
+          if (add_season_display == 0) {
+            $('#seasonform_number').append(++num_seasons);
+            add_season_display++;
+          }
+          form_display(sid);
+          nav_add_button(0);
+        }
+        function cancel_seasonform() {
+          var sid = 'seriesform';
+          form_display(sid);
+          nav_add_button(1);
+        }
+        $(document).ready(function() {
+          $("#sortable_1").sortable();
+        });
+
+      </script>
+      <!-- end Season work -->
+
+    </div>
+    <div class="span3"/>
+      {% include 'series-form.tpl' %}
+      {% include 'season-form.tpl' %}
+    </div>
+
+  {% end %}

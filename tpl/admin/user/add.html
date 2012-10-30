@@ -1,0 +1,21 @@
+{% extends "../base.tpl" %}
+  {% block header_extra %}
+  {% end %}
+  {% block admin-content %}
+
+    <div class="span8">
+      {% include '../../includes/error-include.tpl' %}
+      <form action="{{reverse_url('admin-user-add')}}" method="POST" class="form-horizontal">
+        {% raw xsrf_form_html() %}
+        <fieldset>
+          <legend>Add User Form</legend>
+          {% set form = userform %}
+          {% include '../../includes/form-fields.tpl %}
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Add User</button>
+            <button class="btn">Cancel</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  {% end %}

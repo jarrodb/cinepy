@@ -1,0 +1,82 @@
+{% extends "../base/base.tpl" %}
+  {% block header_extra %}
+  <script type="text/javascript">
+    function resetForm($form) {
+        $form.find('input:text, input:password, input:file, select, textarea').val('');
+        $form.find('input:radio, input:checkbox').removeAttr('checked').removeAttr('selected');
+    }
+
+  </script>
+  <style>
+    .sidebar-nav-fixed {
+      position:fixed;
+      top:109px;
+      width:16.97%;
+    }
+
+    @media (max-width: 767px) {
+      .sidebar-nav-fixed {
+        width:auto;
+      }
+    }
+
+    @media (max-width: 979px) {
+      .sidebar-nav-fixed {
+        position:static;
+        width: auto;
+      }
+    }
+  </style>
+
+  {% end %}
+  {% block content %}
+      {% include "movies-pager.tpl" %}
+
+      <div class="row">
+        <div class="span9">
+        {% if page.count %}
+          <ul class="thumbnails">
+            {% for media in page.items %}
+              {% include '../includes/media-result.tpl' %}
+            {% end %}
+          </ul>
+        {% else %}
+           <h2 style="text-align: center;">
+             No results for this letter.
+           </h2>
+        {% end %}
+        </div>
+
+       <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Advanced Search</li>
+            </ul>
+       <form id="msform" class="well" method="GET" action="{{reverse_url('movies')}}">
+        <fieldset>
+          {% raw msform.title.label() %}
+          {% raw msform.title(class_='input-medium', placeholder='All or partial...') %}
+          {% raw msform.adname.label() %}
+          {% raw msform.adname(class_='input-medium', placeholder='Enter name...') %}
+          {% raw msform.genres.label() %}
+          {% raw msform.genres(style='width: 160px;') %}
+
+          {% raw msform.rating.label() %}
+          {% raw msform.rating(style='width: 160px;') %}
+
+          <div class="form-actions">
+            {% raw handler.get_args_form(exclude=['title','adname','genres','rating','search']) %}
+            {% raw msform.search(value='true') %}
+            <button type="submit" class="btn btn-primary">Search</button>
+            <button class="btn" onClick="resetForm($('#msform'));">Clear</button>
+          </div>
+        </fieldset>
+      </form>
+
+          </div><!--/.well -->
+        </div><!--/span-->
+
+      </div>
+
+      {% include "movies-pager.tpl" %}
+  {% end %}

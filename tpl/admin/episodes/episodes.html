@@ -1,0 +1,133 @@
+{% extends "../base.tpl" %}
+  {% block header_extra %}
+  <script type="text/javascript" src="/static/js/custom.js"></script>
+  <script type="text/javascript" src="/static/js/ui.core.min.js"></script>
+  <script type="text/javascript" src="/static/js/ui.sortable.min.js"></script>
+  {% end %}
+  {% block admin-content %}
+      {% if page.is_paginated %}
+        <div class="span6">
+      {% include "../../includes/small-pagination.tpl" %}
+        </div>
+      {% end %}
+
+    <form
+      class="form-horizontal"
+      action="{{reverse_url('admin-episodes-add')}}"
+      method="POST"
+      >
+    {% raw xsrf_form_html() %}
+    <div class="span6">
+      {% include '../../includes/error-include.tpl' %}
+
+      <fieldset>
+        <legend>Add Episodes to the Database</legend>
+        <table id="hi" class="table table-striped">
+          <thead></tr>
+            <th>
+              <input
+                id="checkall"
+                type="checkbox"
+                onclick="checkAll('checkall')"
+                >
+            </th>
+            <th>Filename</th>
+            <th>Episode Title</th>
+            <th>Metadata</th>
+          </tr></thead>
+          <tbody>
+            {% for episode in episodesform.media %}
+            <!-- Movie Row -->
+            <tr>
+              <td>{% raw episode.selected %}</td>
+              <td>{{episode.file.data}}</td>
+              <td>{{episode.title.data}}</td>
+              <td>
+                <a
+                  id="{{episode.id}}-view"
+                  href="#"
+                  onclick="el_show('{{episode.id}}');"
+                  >
+                  {% if episode.errors %}
+                  <span style="color: red;">ERROR</span>
+                  {% else %}
+                  view
+                  {% end %}
+                </a>
+              </td>
+            </tr>
+            <!-- End Movie Row -->
+            {% end %}
+          </tbody>
+        </table>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Import selected</button>
+          <a href="/" class="btn">Cancel</a>
+        </div>
+      </fieldset>
+    </div>
+    <div class="span3"/>
+      <div id="movie-info" class="well">
+        <p>Select the movies that you would like to import.</p>                         <p>                                                                               Click 'view' to see any meta data found for the movie you wish to import.  You can edit the fields for each movie to add data before the import.
+        </p>
+        <p>Click 'IMDB Import' to attempt to auto populate movie data.</p>
+      </div>
+      {% for episode in episodesform.media %}
+      <div style="display: none;" class="well" id="{{episode.id}}" >
+        <h4>Folder: <small>{{episode.filename.data.split('/')[-2]}}</small></h4>
+        {% set skip_fields = ['%s-selected'%episode.id] %}
+        {% set hidden_fields = ['%s-filename'%episode.id, '%s-file'%episode.id] %}
+        {% for field in episode %}
+          {% if field.name in skip_fields %}
+          {% elif field.name in hidden_fields %}
+            {% raw field(type='hidden') %}
+          {% else %}
+            {% set kwargs = {'class_':'input-medium'} %}
+            {% raw field.label() %}
+            {% raw field(**kwargs) %}
+            <p class="help-block">
+              {% if field.errors %}
+                <div style="color: red;">{{', '.join(field.errors)}}</div>
+              {% else %}
+                <small>{% raw field.description %}</small>
+              {% end %}
+            </p>
+            <br/>
+          {% end %}
+        {% end %}
+          <input type="button" class="btn" value="Import Data" onClick="meta_data_for_title('{{episode.id}}', '{% raw episode.title.data.replace("'", "\\'") %}', '{{episode.id}}-');">
+      </div>
+      {% end %}
+    </div>
+    </form>
+    <script type="text/javascript">
+        var shown_id = '';
+        function el_show(id) {
+          var minfo = $('#movie-info');
+          minfo.hide();
+          if (shown_id) {
+            var elview = $('#'+shown_id+'-view');
+            var el = $('#'+shown_id);
+            elview.html('view');
+            el.hide();
+          }
+          if (shown_id != id) {
+            var elview = $('#'+id+'-view');
+            var el = $('#'+id);
+            elview.html('hide');
+            el.show();
+            shown_id = id;
+          } else {
+            shown_id = '';
+            minfo.show();
+          }
+          return false;
+        }
+
+        function checkAll(id) {
+          var checkall = $('#'+id);
+          $("input[type='checkbox']").attr('checked', checkall.is(':checked'));
+        }
+    </script>
+
+  {% end %}

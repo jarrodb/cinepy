@@ -1,0 +1,56 @@
+{% extends "base.tpl" %}
+  {% block content %}
+      <div class="row-fluid">
+        <div style="text-align: center;" class="span3">
+          <div class="well">
+            <img src="/static/images/default-profile-medium.jpg">
+            <p style="text-align: center;">{{user.usertype_display()}}</p>
+          </div>
+        </div>
+        <div class="span9">
+            <form action="{{reverse_url('user-edit', user._id)}}" method="POST" class="form-horizontal">
+            {% raw xsrf_form_html() %}
+            <fieldset>
+              <legend>Edit {{user.name}}</legend>
+              {% include '../includes/error-include.tpl' %}
+              {% set form = userform %}
+              {% include '../includes/form-fields.tpl %}
+              <div class="form-actions">
+                <button type="submit" name="update" value="update" class="btn btn-primary">Update</button>
+                <button type="submit" name="delete" value="delete" class="btn btn-danger">Delete</button>
+                <!--<a class="btn btn-danger" data-toggle="modal" href="#confirm">
+                  Delete
+                </a>-->
+              </div>
+            </fieldset>
+            </form>
+        </div>
+      </div>
+      <div class="modal large hide" id="confirm">
+        <div style="text-align: center;" class="modal-header">
+          Confirm Deletion of {{user.name}}
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this user?</p>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-danger">Delete</a>
+          <a href="#" class="btn">Cancel</a>
+        </div>
+      </div>
+      <script type="text/javascript">
+        $('#confirm').modal();
+        function confirmDelete(form) {
+            if (confirm("Are you sure you want to delete this user?")) {
+                form.submit();
+            } else {
+                return false;
+            }
+        }
+      </script>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+  {% end %}

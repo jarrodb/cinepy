@@ -1,0 +1,12 @@
+{% extends "../base.tpl" %}
+  {% block header_extra %}
+  {% end %}
+  {% block admin-content %}
+    <ul class="thumbnails">
+      {% for user in users %}
+        {% include "user.tpl" %}
+      {% end %}
+    </ul>
+    <br/><br/><br/>
+    <br/><br/><br/>
+  {% end %}

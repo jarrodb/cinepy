@@ -1,0 +1,138 @@
+{% extends "../base.tpl" %}
+  {% block header_extra %}
+  <script type="text/javascript" src="/static/js/custom.js"></script>
+  {% end %}
+  {% block admin-content %}
+
+      {% if page.is_paginated %}
+        <div class="span6">
+      {% include "../../includes/small-pagination.tpl" %}
+        </div>
+      {% end %}
+
+    <form
+      class="form-horizontal"
+      action="{{reverse_url('admin-movie-add')}}"
+      method="POST"
+      >
+    {% raw xsrf_form_html() %}
+    <div class="span6">
+      {% include '../../includes/error-include.tpl' %}
+
+      <fieldset>
+        <legend>Add Movies to Library</legend>
+        <table id="hi" class="table table-striped">
+          <thead></tr>
+            <th>
+              <input
+                id="checkall"
+                type="checkbox"
+                onclick="checkAll('checkall')"
+                >
+            </th>
+            <th>Filename</th>
+            <th>Movie Title</th>
+            <th>Metadata</th>
+          </tr></thead>
+          <tbody>
+            {% for movie in moviesform.movies %}
+            <!-- Movie Row -->
+            <tr>
+              <td>{% raw movie.selected %}</td>
+              <td>{{movie.file.data}}</td>
+              <td>{{movie.title.data}}</td>
+              <td>
+                <a
+                  id="{{movie.id}}-view"
+                  href="#"
+                  onclick="el_show('{{movie.id}}');"
+                  >
+                  {% if movie.errors %}
+                  <span style="color: red;">ERROR</span>
+                  {% else %}
+                  view
+                  {% end %}
+                </a>
+              </td>
+            </tr>
+            <!-- End Movie Row -->
+            {% end %}
+          </tbody>
+        </table>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Import selected</button>
+          <a href="/" class="btn">Cancel</a>
+        </div>
+      </fieldset>
+    </div>
+    <div class="span3"/>
+      <div id="movie-info" class="well">
+        <p>Select the movies that you would like to import.</p>
+        <p>
+          Click 'view' to see any meta data found for the movie you wish to import.  You can edit the fields for each movie to add data before the import.
+        </p>
+        <p>Click 'IMDB Import' to attempt to auto populate movie data.</p>
+      </div>
+      {% for movie in moviesform.movies %}
+      <div style="display: none;" class="well" id="{{movie.id}}" >
+        {% set skip_fields = ['%s-selected'%movie.id] %}
+        {% set hidden_fields = ['%s-filename'%movie.id, '%s-file'%movie.id, '%s-poster_url'%movie.id] %}
+        {% for field in movie %}
+          {% if field.name in skip_fields %}
+          {% elif field.name in hidden_fields %}
+            {% raw field(type='hidden') %}
+          {% else %}
+            {% if 'genres' in field.name %}
+              {% set kwargs = {'class_':'input-medium','data-provide':'typeahead', 'data-mode':'multiple', 'data-items':'4', 'data-source':'["Action","Adventure","Animated","Classic","Comedy","Crime","Family","Fantasty","Horror","Love","Musical","Science Fiction","Thriller","Western"]'} %}
+            {% else %}
+              {% set kwargs = {'class_':'input-medium'} %}
+            {% end %}
+            {% raw field.label() %}
+            {% raw field(**kwargs) %}
+            <p class="help-block">
+              {% if field.errors %}
+                <div style="color: red;">{{', '.join(field.errors)}}</div>
+              {% else %}
+                <small>{% raw field.description %}</small>
+              {% end %}
+            </p>
+            <br/>
+          {% end %}
+        {% end %}
+          <input type="button" class="btn" value="Import Data" onClick="meta_data_for_title('{{movie.id}}', '{% raw movie.title.data.replace("'", "\\'") %}', '{{movie.id}}-');">
+      </div>
+      {% end %}
+    </div>
+    </form>
+
+    <script type="text/javascript">
+        $('#genres').typeahead();
+        var shown_id = '';
+        function el_show(id) {
+          var minfo = $('#movie-info');
+          minfo.hide();
+          if (shown_id) {
+            var elview = $('#'+shown_id+'-view');
+            var el = $('#'+shown_id);
+            elview.html('view');
+            el.hide();
+          }
+          if (shown_id != id) {
+            var elview = $('#'+id+'-view');
+            var el = $('#'+id);
+            elview.html('hide');
+            el.show();
+            shown_id = id;
+          } else {
+            shown_id = '';
+            minfo.show();
+          }
+          return false;
+        }
+
+        function checkAll(id) {
+          var checkall = $('#'+id);
+          $("input[type='checkbox']").attr('checked', checkall.is(':checked'));
+        }
+    </script>
+  {% end %}

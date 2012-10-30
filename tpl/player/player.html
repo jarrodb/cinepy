@@ -1,0 +1,64 @@
+{% extends "../base/base.tpl" %}
+  {% block header_extra %}
+  <script type="text/javascript"
+    src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js">
+  </script>
+  <link href="/static/video/video-js.css" rel="stylesheet">
+  <script src="/static/video/video.js"></script>
+  <script type="text/javascript" src="/static/js/custom.js"></script>
+  {% end %}
+  {% block content %}
+
+      <!--<div style="text-align: center;" class="hero-unit">-->
+      <div class="row">
+        <table align="center"><tr><td>
+
+          <video
+            id="my_video_1"
+            class="video-js vjs-default-skin"
+            controls
+            preload="auto"
+            width="960"
+            height="540"
+            data-setup="{}"
+            >
+            <source src="/static/media/movies/{{uuid_file}}" type='video/mp4'>
+          </video>
+          <script>
+            $(function() {
+              var _update_ms = 10000;
+              var _repeat_handler = 1;
+              var movie_id = "{{movie._id}}";
+              _V_.options.flash.swf = "/static/video/video-js.swf";
+              _V_("my_video_1").ready(function() {
+                var myPlayer = this;
+                var _repeat_handler = 1;
+                myPlayer.addEvent("play", function() {
+                  _repeat_handler = window.setInterval(function() {
+                    var whereYouAt = myPlayer.currentTime();
+                    movie_time("{{reverse_url('api-movie-time')}}",movie_id,whereYouAt);
+                  }, _update_ms);
+                });
+                myPlayer.addEvent("pause", myPlayer.proxy(this, function() {
+                  window.clearInterval(_repeat_handler);
+                  var whereYouAt = myPlayer.currentTime();
+                  movie_time("{{reverse_url('api-movie-time')}}",movie_id,whereYouAt);
+                }));
+                myPlayer.addEvent("ended", myPlayer.proxy(this, function() {
+                  movie_time("{{reverse_url('api-movie-time')}}",movie_id,0.0);
+                }));
+                {% if time %}
+                myPlayer.addEvent("loadedmetadata", function() {
+                  myPlayer.proxy(this, this.currentTime({{time}}));
+                  myPlayer.pause();
+                  myPlayer.play();
+                });
+                {% end %}
+                myPlayer.play();
+              });
+            });
+          </script>
+        </td></tr></table>
+      </div>
+
+  {% end %}

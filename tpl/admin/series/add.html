@@ -1,0 +1,33 @@
+{% extends "../base.tpl" %}
+  {% block header_extra %}
+  <script type="text/javascript" src="/static/js/custom.js"></script>
+  {% end %}
+  {% block admin-content %}
+
+    <form
+      class="form-horizontal"
+      action="{{reverse_url('admin-series-add')}}"
+      method="POST"
+      >
+    {% raw xsrf_form_html() %}
+    <div class="span6">
+      {% include '../../includes/error-include.tpl' %}
+
+      <fieldset>
+        <legend>Add a new Series to the Media Library</legend>
+        {% set form = seriesform %}
+        {% set formdata = {'genres':{'class_':'input-medium','data-provide':'typeahead', 'data-mode':'multiple', 'data-items':'4', 'data-source':'["Action","Adventure","Animated","Classic","Comedy","Crime","Family","Fantasty","Horror","Love","Musical","Science Fiction","Thriller","Western"]'}, 'test': {'type': 'hidden'}} %}
+        {% include "../../includes/form-fields.tpl" %}
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">selected</button>
+          <a href="/" class="btn">Cancel</a>
+        </div>
+      </fieldset>
+    </div>
+    <div class="span3"/>
+      <div class="well">
+        Hello
+      </div>
+    </div>
+    </form>
+  {% end %}

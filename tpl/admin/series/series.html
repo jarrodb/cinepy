@@ -1,0 +1,30 @@
+{% extends "../base.tpl" %}
+  {% block header_extra %}
+  {% end %}
+  {% block admin-content %}
+    <div class="span6">
+    {% if page.count %}
+      {% if page.is_paginated %}
+        <div class="row">
+          {% include "../../includes/pagination.tpl" %}
+        </div>
+      {% end %}
+        <ul class="thumbnails">
+        {% for series in page.items %}
+            {% include "series.tpl" %}
+        {% end %}
+        </ul>
+    {% else %}
+      No Results
+    {% end %}
+    </div>
+    <div class="span3">
+      <form class="well form-search">
+        <input name="query" type="text" class="input-medium search-query" placeholder="Find series...">
+        <button type="submit" class="btn">Search</button>
+      </form>
+    </div>
+
+    <br/><br/><br/>
+    <br/><br/><br/>
+  {% end %}

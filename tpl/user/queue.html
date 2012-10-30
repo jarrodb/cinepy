@@ -1,0 +1,56 @@
+{% extends "base.tpl" %}
+  {% block content %}
+      <div class="row-fluid">
+        <div style="text-align: center;" class="span3">
+          <div class="well">
+            <img src="/static/images/default-profile-medium.jpg">
+            <p style="text-align: center;">{{user.usertype_display()}}</p>
+          </div>
+        </div>
+        <div class="span9">
+          <h1>{{user.name}}</h1>
+          <h3>{{user.email}}</h3>
+        </div>
+        <div class="span9">
+          {% if queue %}
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Title</th>
+                <th>Year</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% raw xsrf_form_html() %}
+              {% for i, m in enumerate(queue.media, 1) %}
+              <tr>
+                <td>{{i}}</td>
+                <td>{{m.get('title')}}</td>
+                <td>{{m.get('date').year}}</td>
+                <td>
+                  <a href="#"><i class="icon-arrow-up"></i></a>
+                  <a href="#"><i class="icon-arrow-down"></i></a>
+                  <a
+                    href="#"
+                    onClick="queue('{{reverse_url('api-queue')}}', '{{m.get('_id')}}', 'delete');"
+                    >
+                    <i class="icon-remove"></i>
+                  </a>
+                </td>
+              </tr>
+              {% end %}
+            </tbody>
+          </table>
+          {% else %}
+          <p><h4>You have no movies in your queue.</h4></p>
+          {% end %}
+        </div>
+      </div>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+  {% end %}

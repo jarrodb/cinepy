@@ -1,0 +1,19 @@
+# Rename this file to settings_prod.py and the
+# main settings.py will override the values for
+# production environments
+
+settings = dict(
+    debug = True,
+    site_url = 'http://127.0.0.1:8888',
+    cookie_secret = "set_this_here",
+    mongo_server = "localhost:27017",
+    mongo_dbname = "cinepy",
+    mongo_user = None,
+    mongo_pass = None,
+
+    movie_media_path = '/movies',
+    series_media_path = '/movies',
+    movie_staging_path = '/staging/movies',
+    series_staging_path = '/staging/series',
+)
+

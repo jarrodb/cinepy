@@ -1,0 +1,23 @@
+{% extends "../base.tpl" %}
+  {% block header_extra %}
+  {% end %}
+  {% block admin-content %}
+      <div class="row-fluid">
+        <div style="text-align: center;" class="span2">
+          <img src="/static/images/default-profile.jpg">
+          <p style="text-align: center;">{{user.usertype_display()}}</p>
+        </div>
+        <div class="span6">
+          {{user.email}}<br>
+          {{user.name}}<br>
+          <button class="btn">Delete</button>
+          <button class="btn">Disable</button>
+        </div>
+      </div>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+    <br/><br/>
+  {% end %}
